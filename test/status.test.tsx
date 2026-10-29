@@ -1,5 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createApp } from '../src/app.js';
+
+// readNight is still a stub (issue #2).
+vi.mock('../src/digest/types.js', () => ({
+  readNight: (_dir: string, night: string) => ({ kind: 'found', night, rows: [], badLines: 0 }),
+}));
 
 const config = { adapter: 'shim', installed: '2026-10-29T14:06:00+01:00', beatEverySeconds: 60, runsDir: 'runs' };
 
