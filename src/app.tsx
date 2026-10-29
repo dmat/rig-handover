@@ -4,6 +4,7 @@ import { sortByJob } from './digest/sort.js';
 import { readNight } from './digest/types.js';
 import { lane } from './lane.js';
 import { readStatus } from './status.js';
+import { DigestPage } from './views/digest.js';
 import { Layout } from './views/layout.js';
 import { StatusBoard } from './views/status.js';
 
@@ -26,6 +27,18 @@ export function createApp(config: RigConfig = loadConfig()) {
     const result = readNight(config.runsDir, night);
     if (result.kind === 'missing') return c.json({ error: 'no such night', night }, 404);
     return c.json({ night, rows: sortByJob(result.rows), badLines: result.badLines });
+  });
+
+  app.get('/digest/:night', (c) => {
+    const night = c.req.param('night');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(night)) return c.text('not found', 404);
+    const result = readNight(config.runsDir, night);
+    if (result.kind === 'missing') return c.text('not found', 404);
+    return c.html(
+      <Layout title={`digest ${night}`} lane={lane()}>
+        <DigestPage night={result} />
+      </Layout>,
+    );
   });
 
   return app;
