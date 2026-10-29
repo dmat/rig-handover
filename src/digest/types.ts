@@ -20,8 +20,4 @@ export type Night =
   | { kind: 'missing'; night: string }
   | { kind: 'found'; night: string; rows: DigestRow[]; badLines: number };
 
-export function readNight(runsDir: string, night: string): Night {
-  void runsDir;
-  void night;
-  throw new Error('readNight: not implemented (issue #2)');
-}
+export { readNight } from './read.js';
